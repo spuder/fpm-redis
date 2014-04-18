@@ -13,16 +13,17 @@
 
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-DAEMON=/usr/bin/redis-server
-# DAEMON_ARGS=/etc/redis/redis.conf #spencer
+#DAEMON=/usr/bin/redis-server
+DAEMON=/usr/local/bin/redis-server
+# DAEMON_ARGS=/etc/redis/redis.conf
 DAEMON_ARGS=/etc/redis/<%= @fpm_redis_port -%>.conf
 
 
 NAME=redis-server
 DESC=redis-server
 
-# RUNDIR=/var/run/redis/ #spencer
-RUNDIR=/var/run/redis/redis-<%= @fpm_redis_port -%>
+# RUNDIR=/var/run/redis/
+RUNDIR=/var/run/redis/redis-<%= @fpm_redis_port %>
 PIDFILE=$RUNDIR/redis-server.pid
 
 test -x $DAEMON || exit 0
@@ -39,7 +40,7 @@ case "$1" in
 	echo -n "Starting $DESC: "
 	mkdir -p $RUNDIR
 	touch $PIDFILE
-	chown redis:redis $RUNDIR $PIDFILE
+	#chown redis:redis $RUNDIR $PIDFILE
 	chmod 755 $RUNDIR
 
 	if [ -n "$ULIMIT" ]
@@ -47,7 +48,8 @@ case "$1" in
 		ulimit -n $ULIMIT
 	fi
 
-	if start-stop-daemon --start --quiet --umask 007 --pidfile $PIDFILE --chuid redis:redis --exec $DAEMON -- $DAEMON_ARGS
+	# if start-stop-daemon --start --quiet --umask 007 --pidfile $PIDFILE --chuid redis:redis --exec $DAEMON -- $DAEMON_ARGS
+	if start-stop-daemon --start --quiet --umask 007 --pidfile $PIDFILE  --exec $DAEMON -- $DAEMON_ARGS
 	then
 		echo "$NAME."
 	else

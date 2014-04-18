@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -x 
+# set -x 
 PATH=$PATH:/bin:/usr/bin:/usr/local/bin
 
 
@@ -14,14 +14,20 @@ export FACTER_FPM_INSTALLDIR='/tmp/installdir'
 export FACTER_FPM_REDIS_URL="http://download.redis.io/releases"
 # export FACTER_FPM_NAME="redis-$FACTER_FPM_REDIS_PORT"
 
+echo "Installing puppet"
 yum install -y puppet
 
 # Install prerequisits for fpm
+echo "Attempting to install puppetlabs standard library"
 puppet module install puppetlabs/stdlib --modulepath=/tmp/modules
 
+echo "Attempting to install required packages"
 puppet apply ./manifests/packages.pp --modulepath=/tmp/modules
 
+echo "Attempting to install fpm"
+gem install fpm
 # Download and extract redis
+echo "Downloading redis $FACTER_FPM_REDIS_VERSION"
 mkdir -p $FACTER_FPM_INSTALLDIR
 wget $FACTER_FPM_REDIS_URL/redis-$FACTER_FPM_REDIS_VERSION.tar.gz -O /tmp/redis-$FACTER_FPM_REDIS_VERSION.tar.gz
 tar -xvf /tmp/redis-$FACTER_FPM_REDIS_VERSION.tar.gz -C /tmp
@@ -55,4 +61,9 @@ function configure () {
 
 
 configure "RedHat"
+echo "Generating RPM"
 fpm -s dir -m $FACTER_FPM_EMAIL -C $FACTER_FPM_INSTALLDIR  -t rpm -n "redis-$FACTER_FPM_REDIS_PORT" -v "$FACTER_FPM_REDIS_VERSION" --iteration $FACTER_FPM_ITTERATION etc/ usr/ var/ 
+
+configure "Debian"
+echo "Generating deb"
+fpm -s dir -m $FACTER_FPM_EMAIL -C $FACTER_FPM_INSTALLDIR  -t deb -n "redis-$FACTER_FPM_REDIS_PORT" -v "$FACTER_FPM_REDIS_VERSION" --iteration $FACTER_FPM_ITTERATION etc/ usr/ var/ 
