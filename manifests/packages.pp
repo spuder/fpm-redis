@@ -1,6 +1,6 @@
 class fpm::packages {
 
-    $required_packages=['rubygems','ruby-devel', 'gcc','rpm-build']
+    $required_packages=['rubygems','ruby-devel', 'gcc', 'gcc-c++', 'rpm-build']
 
 	ensure_packages($required_packages)
 

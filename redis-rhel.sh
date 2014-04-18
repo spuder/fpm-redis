@@ -21,7 +21,6 @@ puppet module install puppetlabs/stdlib --modulepath=/tmp/modules
 
 puppet apply ./manifests/packages.pp --modulepath=/tmp/modules
 
-
 # Download and extract redis
 mkdir -p $FACTER_FPM_INSTALLDIR
 wget $FACTER_FPM_REDIS_URL/redis-$FACTER_FPM_REDIS_VERSION.tar.gz -O /tmp/redis-$FACTER_FPM_REDIS_VERSION.tar.gz
@@ -38,5 +37,10 @@ mkdir -p $FACTER_FPM_INSTALLDIR/var/lib/redis/$FACTER_FPM_REDIS_PORT
 
 # Retreive init script from online 
 #wget https://gist.githubusercontent.com/spuder/9401395/raw -O /tmp/redis_$FACTER_FPM_REDIS_VERSION.erb
-puppet apply ./manifests/startupscript.pp --modulepath=/tmp/modules
 
+# Apply init script
+export FACTER_FPM_OSFAMILY='RedHat'
+puppet apply ./manifests/initscript.pp --modulepath=/tmp/modules
+
+# Apply configuration file
+puppet apply ./manifests/config.pp --modulepath=/tmp/modules
