@@ -6,6 +6,9 @@ class initscript() {
       ensure => file,
     # content => "${fpm_redis_pwd}/templates/redis_init_${::osfamily}.erb",
     content => template("${fpm_redis_pwd}/templates/redis_init_${::fpm_osfamily}.erb"),
+    mode    => 0755,
+    owner   => 'root',
+    group   => 'root',
   }
 
 }

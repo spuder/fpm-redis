@@ -34,13 +34,25 @@ PREFIX=$FACTER_FPM_INSTALLDIR/usr/local/ make install -C /tmp/redis-$FACTER_FPM_
 mkdir -p $FACTER_FPM_INSTALLDIR/etc/init.d/
 mkdir -p $FACTER_FPM_INSTALLDIR/etc/redis/
 mkdir -p $FACTER_FPM_INSTALLDIR/var/lib/redis/$FACTER_FPM_REDIS_PORT
+mkdir -p $FACTER_FPM_INSTALLDIR/var/log/
+# mkdir -p $FACTER_FPM_INSTALLDIR/var/log/redis
+mkdir -p $FACTER_FPM_INSTALLDIR/var/run/redis/
+
+
 
 # Retreive init script from online 
 #wget https://gist.githubusercontent.com/spuder/9401395/raw -O /tmp/redis_$FACTER_FPM_REDIS_VERSION.erb
 
-# Apply init script
-export FACTER_FPM_OSFAMILY='RedHat'
-puppet apply ./manifests/initscript.pp --modulepath=/tmp/modules
+function configure () {
 
-# Apply configuration file
-puppet apply ./manifests/config.pp --modulepath=/tmp/modules
+	export FACTER_FPM_OSFAMILY=$1
+	# Apply init script
+	puppet apply ./manifests/initscript.pp --modulepath=/tmp/modules
+
+	# Apply configuration file
+	puppet apply ./manifests/config.pp --modulepath=/tmp/modules
+}
+
+
+configure "RedHat"
+fpm -s dir -m $FACTER_FPM_EMAIL -C $FACTER_FPM_INSTALLDIR  -t rpm -n "redis-$FACTER_FPM_REDIS_PORT" -v "$FACTER_FPM_REDIS_VERSION" --iteration $FACTER_FPM_ITTERATION etc/ usr/ var/ 
