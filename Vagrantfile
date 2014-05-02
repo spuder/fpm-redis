@@ -10,8 +10,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "PuppetlabsCent64"
-  config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-65-x64-virtualbox-puppet.box"
+  config.vm.define "centos" do |centos|
+    centos.vm.box   = "PuppetlabsCent65"
+    centos.vm.box = "http://puppet-vagrant-boxes.puppetlabs.com/centos-65-x64-virtualbox-puppet.box"
+  end
+  config.vm.define "ubuntu" do |ubuntu|
+    ubuntu.vm.box   = "PuppetlabsUbuntu1204"
+    ubuntu.vm.box = "http://puppet-vagrant-boxes.puppetlabs.com/ubuntu-server-12042-x64-vbox4210.box"
+  end
+
+
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
