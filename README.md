@@ -11,10 +11,10 @@ Creates a redis RPM and .deb packages using masterless puppet modules
 - Edit variables in redis-rhel.sh
 
 
-    export FACTER_FPM_REDIS_PORT="6390"
-    export FACTER_FPM_REDIS_VERSION="2.8.8"
-    export FACTER_FPM_EMAIL='sowen@adaptivecomputing.com'
-    export FACTER_FPM_ITTERATION="1"
+    export FACTER_FPM_REDIS_PORT="6390"  
+    export FACTER_FPM_REDIS_VERSION="2.8.8"  
+    export FACTER_FPM_EMAIL='sowen@adaptivecomputing.com'  
+    export FACTER_FPM_ITTERATION="1"  
 
 - Run script
 
@@ -30,6 +30,6 @@ Creates a redis RPM and .deb packages using masterless puppet modules
 
 ## Contact
 
-twitter => @spencer450
+twitter => @spencer450  
 github  => spuder
 
